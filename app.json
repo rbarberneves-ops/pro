@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "BeautyMatch",
-    "slug": "BeautyMatch",
+    "name": "PRO",
+    "slug": "PRO",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "beautymatch",
+    "scheme": "pro",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -23,7 +23,13 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "name": "PRO",
+      "shortName": "PRO",
+      "description": "Conecta profissionais e espaços de beleza.",
+      "themeColor": "#e94560",
+      "backgroundColor": "#000000",
+      "lang": "pt"
     },
     "plugins": [
       "expo-router",
@@ -38,7 +44,10 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-secure-store",
+      "expo-av",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true,
