@@ -12,6 +12,12 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
       filePath: path.resolve(__dirname, 'mocks/react-native-maps.js'),
     };
   }
+  if (platform === 'web' && moduleName === 'expo-secure-store') {
+    return {
+      type: 'sourceFile',
+      filePath: path.resolve(__dirname, 'mocks/expo-secure-store.js'),
+    };
+  }
   if (originalResolveRequest) {
     return originalResolveRequest(context, moduleName, platform);
   }
