@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity,
-  FlatList, Dimensions, Animated, StatusBar, SafeAreaView,
+  StatusBar, SafeAreaView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,7 +9,6 @@ import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Video, ResizeMode } from 'expo-av';
 
-const { width } = Dimensions.get('window');
 const videoSource = require('../assets/images/intro.mp4');
 
 const SLIDES = [
@@ -41,9 +40,7 @@ const SLIDES = [
 
 export default function OnboardingScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const flatRef = useRef<FlatList>(null);
-  const scrollX = useRef(new Animated.Value(0)).current;
-
+  const slide = SLIDES[currentIndex];
 
   async function finish() {
     await AsyncStorage.setItem('pro_onboarding_done', 'true');
@@ -52,7 +49,6 @@ export default function OnboardingScreen() {
 
   function next() {
     if (currentIndex < SLIDES.length - 1) {
-      flatRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true });
       setCurrentIndex(currentIndex + 1);
     } else {
       finish();
@@ -81,44 +77,32 @@ export default function OnboardingScreen() {
       />
 
       <SafeAreaView style={{ flex: 1 }}>
-        {/* Slides com overlay de cor */}
-        <FlatList
-          ref={flatRef}
-          data={SLIDES}
-          keyExtractor={(_, i) => String(i)}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          scrollEnabled={false}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            { useNativeDriver: false }
-          )}
-          renderItem={({ item }) => (
-            <View style={styles.slide}>
-              <LinearGradient
-                colors={item.overlay}
-                style={StyleSheet.absoluteFill}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 0, y: 1 }}
-              />
-              <View style={styles.iconWrap}>
-                <Ionicons name={item.icon} size={80} color="rgba(255,255,255,0.9)" />
-              </View>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.subtitle}>{item.subtitle}</Text>
-            </View>
-          )}
-        />
+        {/* Slide atual */}
+        <View style={styles.slide}>
+          <LinearGradient
+            colors={slide.overlay}
+            style={StyleSheet.absoluteFill}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+          />
+          <View style={styles.iconWrap}>
+            <Ionicons name={slide.icon} size={80} color="rgba(255,255,255,0.9)" />
+          </View>
+          <Text style={styles.title}>{slide.title}</Text>
+          <Text style={styles.subtitle}>{slide.subtitle}</Text>
+        </View>
 
         {/* Dots */}
         <View style={styles.dotsRow}>
-          {SLIDES.map((_, i) => {
-            const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
-            const dotWidth = scrollX.interpolate({ inputRange, outputRange: [8, 24, 8], extrapolate: 'clamp' });
-            const opacity = scrollX.interpolate({ inputRange, outputRange: [0.4, 1, 0.4], extrapolate: 'clamp' });
-            return <Animated.View key={i} style={[styles.dot, { width: dotWidth, opacity }]} />;
-          })}
+          {SLIDES.map((_, i) => (
+            <View
+              key={i}
+              style={[styles.dot, {
+                width: i === currentIndex ? 24 : 8,
+                opacity: i === currentIndex ? 1 : 0.4,
+              }]}
+            />
+          ))}
         </View>
 
         {/* Botões */}
@@ -148,7 +132,6 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#000' },
   slide: {
-    width,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
