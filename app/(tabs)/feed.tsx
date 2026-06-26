@@ -454,7 +454,7 @@ const styles = StyleSheet.create({
   postType: { fontSize: 12 },
   postTime: { fontSize: 12 },
   postContent: { fontSize: 15, lineHeight: 22, paddingHorizontal: 14, paddingBottom: 12 },
-  postImage: { width: width, height: width * 0.75 },
+  postImage: { width: '100%', aspectRatio: 4 / 3 },
   postActions: { flexDirection: 'row', gap: 20, padding: 12, paddingHorizontal: 14, borderTopWidth: 1 },
   postAction: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   postActionText: { fontSize: 14 },
